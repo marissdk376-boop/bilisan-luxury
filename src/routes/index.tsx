@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Sparkles, Flame, Leaf } from "lucide-react";
 import { communesByWilaya } from "@/data/communes";
+import { deliveryRates, getRateForWilaya, wilayaLabel } from "@/data/shipping";
 
 type Pack = { id: string; label: string; price: number; desc: string; featured?: boolean };
 const packs: Pack[] = [
@@ -12,20 +13,19 @@ const packs: Pack[] = [
 ];
 type PackId = string;
 
-import img1 from "@/assets/6b03e214-cf61-49ce-ad38-897931b75b96.jpg.asset.json";
-import img2 from "@/assets/a5a2f101-4cd1-432b-a47a-82fd598c99c7.jpg.asset.json";
-import img3 from "@/assets/a38543b2-d4e3-4c23-8383-f7f407375797.jpg.asset.json";
-import img4 from "@/assets/1c6eaf9d-6f71-44ba-98c6-2bc94fa39eb3.jpg.asset.json";
-import img5 from "@/assets/d42a2cc1-ec0c-4c45-961e-367b7bf54ad3.jpg.asset.json";
-
-const images = [img1.url, img2.url, img3.url, img4.url, img5.url];
+const images = [
+  "/1c6eaf9d-6f71-44ba-98c6-2bc94fa39eb3.jfif",
+  "/a5a2f101-4cd1-432b-a47a-82fd598c99c7.jfif",
+  "/a38543b2-d4e3-4c23-8383-f7f407375797.jfif",
+  "/d42a2cc1-ec0c-4c45-961e-367b7bf54ad3.jfif",
+];
 
 export const Route = createFileRoute("/")({
   component: Landing,
   head: () => ({
     meta: [
-      { property: "og:image", content: img1.url },
-      { name: "twitter:image", content: img1.url },
+      { property: "og:image", content: images[0] },
+      { name: "twitter:image", content: images[0] },
     ],
     scripts: [{
       type: "application/ld+json",
@@ -47,13 +47,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-const wilayas = [
-  "أدرار","الشلف","الأغواط","أم البواقي","باتنة","بجاية","بسكرة","بشار","البليدة","البويرة",
-  "تمنراست","تبسة","تلمسان","تيارت","تيزي وزو","الجزائر","الجلفة","جيجل","سطيف","سعيدة",
-  "سكيكدة","سيدي بلعباس","عنابة","قالمة","قسنطينة","المدية","مستغانم","المسيلة","معسكر","ورقلة",
-  "وهران","البيض","إليزي","برج بوعريريج","بومرداس","الطارف","تندوف","تيسمسيلت","الوادي","خنشلة",
-  "سوق أهراس","تيبازة","ميلة","عين الدفلى","النعامة","عين تموشنت","غرداية","غليزان",
-];
+// Wilayas are now sourced from shipping.ts (only covered zones)
 
 function Landing() {
   const [main, setMain] = useState(images[0]);
@@ -144,9 +138,13 @@ function OrderForm() {
   const [pack, setPack] = useState<PackId>("grande");
   const [wilaya, setWilaya] = useState("");
   const [commune, setCommune] = useState("");
+  const [deliveryType, setDeliveryType] = useState<"domicile" | "stopDesk">("domicile");
 
   const communes = useMemo(() => (wilaya ? communesByWilaya[wilaya] ?? [] : []), [wilaya]);
-  const total = packs.find((p) => p.id === pack)!.price;
+  const productPrice = packs.find((p) => p.id === pack)!.price;
+  const rate = getRateForWilaya(wilaya);
+  const deliveryFee = rate ? rate[deliveryType] : 0;
+  const total = productPrice + deliveryFee;
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,7 +213,9 @@ function OrderForm() {
                 className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl"
               >
                 <option value="">اختر الولاية</option>
-                {wilayas.map((w) => <option key={w} value={w}>{w}</option>)}
+                {deliveryRates.map((r) => (
+                  <option key={r.wilaya} value={r.wilaya}>{wilayaLabel(r)}</option>
+                ))}
               </select>
             </div>
             <div>
@@ -234,12 +234,49 @@ function OrderForm() {
             <div className="md:col-span-2">
               <Field label="العنوان" name="address" required />
             </div>
+
+            {/* Delivery type */}
+            <div className="md:col-span-2">
+              <label className="mb-2 block text-sm font-bold text-secondary">نوع التوصيل</label>
+              <div className="grid grid-cols-2 gap-3">
+                {([
+                  { key: "domicile", label: "توصيل للمنزل 🏠", sub: rate ? `${rate.domicile} DA` : "—" },
+                  { key: "stopDesk", label: "Stop Desk 📦",    sub: rate ? `${rate.stopDesk} DA` : "—" },
+                ] as const).map(({ key, label, sub }) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setDeliveryType(key)}
+                    className={`rounded-2xl border-2 p-3 text-center transition ${
+                      deliveryType === key
+                        ? "border-primary bg-primary/10 shadow-gold"
+                        : "border-input bg-white/60 hover:border-primary/50"
+                    }`}
+                  >
+                    <div className="text-sm font-bold text-secondary">{label}</div>
+                    <div className="mt-0.5 text-xs font-semibold text-primary">{sub}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Total */}
-          <div className="mt-6 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4">
-            <span className="text-sm font-bold text-secondary sm:text-base">المجموع</span>
-            <span className="text-2xl font-black text-primary sm:text-3xl">{total} DA</span>
+          {/* Total breakdown */}
+          <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4 space-y-2">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>سعر المنتج</span>
+              <span className="font-semibold text-secondary">{productPrice} DA</span>
+            </div>
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>تكلفة التوصيل</span>
+              <span className="font-semibold text-secondary">
+                {wilaya ? `${deliveryFee} DA` : "اختر الولاية أولاً"}
+              </span>
+            </div>
+            <div className="border-t border-primary/20 pt-2 flex items-center justify-between">
+              <span className="font-bold text-secondary">المجموع الكلي</span>
+              <span className="text-2xl font-black text-primary sm:text-3xl">{wilaya ? `${total} DA` : `${productPrice} DA`}</span>
+            </div>
           </div>
 
           <button
@@ -250,7 +287,7 @@ function OrderForm() {
           </button>
 
           <p className="mt-4 text-center text-xs text-muted-foreground sm:text-sm">
-            الدفع عند الاستلام • توصيل لكل الولايات
+            الدفع عند الاستلام • توصيل عبر Swift Express 24/48H
           </p>
         </motion.form>
       </div>
