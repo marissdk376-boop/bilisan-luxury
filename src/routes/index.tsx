@@ -51,8 +51,8 @@ function Landing() {
 
   return (
     <main className="min-h-screen">
-      <div className="mx-auto max-w-6xl px-4 py-10 lg:py-16">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:py-10 lg:py-16">
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-14">
           {/* Gallery */}
           <div>
             <motion.div
@@ -60,16 +60,16 @@ function Landing() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
-              className="glass shadow-luxury overflow-hidden rounded-3xl"
+              className="glass shadow-luxury overflow-hidden rounded-2xl sm:rounded-3xl"
             >
               <img src={main} alt="بخور البيلسان الأصلي" className="aspect-square w-full object-cover" />
             </motion.div>
-            <div className="mt-4 grid grid-cols-5 gap-3">
+            <div className="mt-3 grid grid-cols-5 gap-2 sm:mt-4 sm:gap-3">
               {images.map((src) => (
                 <button
                   key={src}
                   onClick={() => setMain(src)}
-                  className={`overflow-hidden rounded-xl border-2 transition ${main === src ? "border-primary shadow-gold" : "border-transparent opacity-70 hover:opacity-100"}`}
+                  className={`overflow-hidden rounded-lg border-2 transition sm:rounded-xl ${main === src ? "border-primary shadow-gold" : "border-transparent opacity-70 hover:opacity-100"}`}
                 >
                   <img src={src} alt="" className="aspect-square w-full object-cover" />
                 </button>
@@ -79,44 +79,44 @@ function Landing() {
 
           {/* Title + Description */}
           <div className="flex flex-col justify-center">
-            <div className="mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-4 py-1.5 text-xs font-bold text-secondary">
+            <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-bold text-secondary sm:mb-4 sm:px-4 sm:py-1.5 sm:text-xs">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               أصلي 100% من الصحراء الجزائرية
             </div>
 
-            <h1 className="text-4xl font-black leading-tight text-secondary md:text-5xl lg:text-6xl">
+            <h1 className="text-3xl font-black leading-tight text-secondary sm:text-4xl md:text-5xl lg:text-6xl">
               بخور <span className="gold-text">البيلسان</span> الأصلي
             </h1>
 
-            <div className="mt-4 flex items-baseline gap-3">
-              <span className="text-3xl font-black text-primary">3400 DA</span>
-              <span className="text-lg text-muted-foreground line-through">4500 DA</span>
+            <div className="mt-3 flex flex-wrap items-baseline gap-2 sm:mt-4 sm:gap-3">
+              <span className="text-2xl font-black text-primary sm:text-3xl">3400 DA</span>
+              <span className="text-base text-muted-foreground line-through sm:text-lg">4500 DA</span>
             </div>
 
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
               بخور البيلسان الأصلي هو تحفة عطرية نادرة مستخرجة من أعماق الصحراء الجزائرية.
               رائحة شرقية فاخرة تدوم لساعات طويلة، تمنح منزلك أجواء الفخامة والأصالة،
               وتترك أثراً لا يُنسى في كل مناسبة. مكونات طبيعية 100% بدون أي إضافات كيميائية.
             </p>
 
-            <ul className="mt-6 space-y-3">
+            <ul className="mt-5 space-y-2.5 sm:mt-6 sm:space-y-3">
               {[
                 { icon: Leaf, t: "طبيعي 100% بدون مواد كيميائية" },
                 { icon: Flame, t: "رائحة تدوم لأكثر من 8 ساعات" },
                 { icon: Check, t: "الدفع عند الاستلام في كل الولايات" },
               ].map(({ icon: Icon, t }) => (
                 <li key={t} className="flex items-center gap-3 text-secondary">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-primary">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary sm:h-9 sm:w-9">
                     <Icon className="h-4 w-4" />
                   </span>
-                  <span className="font-medium">{t}</span>
+                  <span className="text-sm font-medium sm:text-base">{t}</span>
                 </li>
               ))}
             </ul>
 
             <a
               href="#order"
-              className="gold-gradient shadow-gold mt-8 inline-flex w-full items-center justify-center rounded-2xl px-8 py-4 text-lg font-black text-secondary transition hover:scale-[1.02] md:w-fit"
+              className="gold-gradient shadow-gold mt-6 inline-flex w-full items-center justify-center rounded-2xl px-6 py-3.5 text-base font-black text-secondary transition hover:scale-[1.02] sm:mt-8 sm:px-8 sm:py-4 sm:text-lg md:w-fit"
             >
               اطلب الآن
             </a>
@@ -138,13 +138,13 @@ function OrderForm() {
     setTimeout(() => setSubmitted(false), 4000);
   };
   return (
-    <section id="order" className="mt-20">
+    <section id="order" className="mt-14 sm:mt-20">
       <div className="mx-auto max-w-3xl">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-black text-secondary md:text-4xl">
+        <div className="mb-6 text-center sm:mb-8">
+          <h2 className="text-2xl font-black text-secondary sm:text-3xl md:text-4xl">
             أكمل <span className="gold-text">طلبك</span>
           </h2>
-          <p className="mt-2 text-muted-foreground">املأ النموذج وسنتواصل معك لتأكيد الطلب</p>
+          <p className="mt-2 text-sm text-muted-foreground sm:text-base">املأ النموذج وسنتواصل معك لتأكيد الطلب</p>
         </div>
 
         <motion.form
@@ -153,14 +153,14 @@ function OrderForm() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="glass shadow-luxury rounded-3xl p-6 md:p-10"
+          className="glass shadow-luxury rounded-2xl p-4 sm:rounded-3xl sm:p-6 md:p-10"
         >
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
             <Field label="الاسم الكامل" name="name" required />
             <Field label="رقم الهاتف" name="phone" type="tel" required />
             <div>
               <label className="mb-2 block text-sm font-bold text-secondary">الولاية</label>
-              <select required className="w-full rounded-2xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary">
+              <select required className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl">
                 <option value="">اختر الولاية</option>
                 {wilayas.map((w) => <option key={w} value={w}>{w}</option>)}
               </select>
@@ -168,18 +168,18 @@ function OrderForm() {
             <Field label="البلدية" name="commune" required />
             <div className="md:col-span-2">
               <label className="mb-2 block text-sm font-bold text-secondary">الكمية</label>
-              <input type="number" name="qty" defaultValue={1} min={1} required className="w-full rounded-2xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary" />
+              <input type="number" name="qty" defaultValue={1} min={1} required className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl" />
             </div>
           </div>
 
           <button
             type="submit"
-            className="gold-gradient shadow-gold mt-8 w-full rounded-2xl py-4 text-lg font-black text-secondary transition hover:scale-[1.01]"
+            className="gold-gradient shadow-gold mt-6 w-full rounded-2xl py-3.5 text-base font-black text-secondary transition hover:scale-[1.01] sm:mt-8 sm:py-4 sm:text-lg"
           >
             {submitted ? "تم استلام طلبك ✓" : "تأكيد الطلب"}
           </button>
 
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <p className="mt-4 text-center text-xs text-muted-foreground sm:text-sm">
             الدفع عند الاستلام • توصيل لكل الولايات
           </p>
         </motion.form>
@@ -196,7 +196,7 @@ function Field({ label, name, type = "text", required }: { label: string; name: 
         name={name}
         type={type}
         required={required}
-        className="w-full rounded-2xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary"
+        className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl"
       />
     </div>
   );
