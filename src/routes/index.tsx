@@ -97,8 +97,8 @@ function Landing() {
             </h1>
 
             <div className="mt-3 flex flex-wrap items-baseline gap-2 sm:mt-4 sm:gap-3">
-              <span className="text-2xl font-black text-primary sm:text-3xl">3400 DA</span>
-              <span className="text-base text-muted-foreground line-through sm:text-lg">4500 DA</span>
+              <span className="text-sm text-muted-foreground">ابتداءً من</span>
+              <span className="text-2xl font-black text-primary sm:text-3xl">2000 DA</span>
             </div>
 
             <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
