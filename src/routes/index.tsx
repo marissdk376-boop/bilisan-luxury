@@ -140,11 +140,19 @@ function Landing() {
 
 function OrderForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [pack, setPack] = useState<PackId>("grande");
+  const [wilaya, setWilaya] = useState("");
+  const [commune, setCommune] = useState("");
+
+  const communes = useMemo(() => (wilaya ? communesByWilaya[wilaya] ?? [] : []), [wilaya]);
+  const total = packs.find((p) => p.id === pack)!.price;
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
   };
+
   return (
     <section id="order" className="mt-14 sm:mt-20">
       <div className="mx-auto max-w-3xl">
@@ -152,7 +160,7 @@ function OrderForm() {
           <h2 className="text-2xl font-black text-secondary sm:text-3xl md:text-4xl">
             أكمل <span className="gold-text">طلبك</span>
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground sm:text-base">املأ النموذج وسنتواصل معك لتأكيد الطلب</p>
+          <p className="mt-2 text-sm text-muted-foreground sm:text-base">اختر العرض المناسب وأكمل معلوماتك</p>
         </div>
 
         <motion.form
@@ -163,26 +171,79 @@ function OrderForm() {
           transition={{ duration: 0.6 }}
           className="glass shadow-luxury rounded-2xl p-4 sm:rounded-3xl sm:p-6 md:p-10"
         >
+          {/* Pack selector */}
+          <div className="mb-5 sm:mb-6">
+            <label className="mb-3 block text-sm font-bold text-secondary">اختر العرض</label>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {packs.map((p) => {
+                const active = pack === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setPack(p.id)}
+                    className={`relative rounded-2xl border-2 p-4 text-center transition ${
+                      active
+                        ? "border-primary bg-primary/10 shadow-gold"
+                        : "border-input bg-white/60 hover:border-primary/50"
+                    }`}
+                  >
+                    {p.featured && (
+                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-secondary">
+                        الأكثر طلباً
+                      </span>
+                    )}
+                    <div className="text-sm font-bold text-secondary">{p.label}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">{p.desc}</div>
+                    <div className="mt-2 text-lg font-black text-primary">{p.price} DA</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
             <Field label="الاسم الكامل" name="name" required />
             <Field label="رقم الهاتف" name="phone" type="tel" required />
             <div>
               <label className="mb-2 block text-sm font-bold text-secondary">الولاية</label>
-              <select required className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl">
+              <select
+                required
+                value={wilaya}
+                onChange={(e) => { setWilaya(e.target.value); setCommune(""); }}
+                className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl"
+              >
                 <option value="">اختر الولاية</option>
                 {wilayas.map((w) => <option key={w} value={w}>{w}</option>)}
               </select>
             </div>
-            <Field label="البلدية" name="commune" required />
-            <div className="md:col-span-2">
-              <label className="mb-2 block text-sm font-bold text-secondary">الكمية</label>
-              <input type="number" name="qty" defaultValue={1} min={1} required className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl" />
+            <div>
+              <label className="mb-2 block text-sm font-bold text-secondary">البلدية</label>
+              <select
+                required
+                value={commune}
+                onChange={(e) => setCommune(e.target.value)}
+                disabled={!wilaya}
+                className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary disabled:opacity-60 sm:rounded-2xl"
+              >
+                <option value="">{wilaya ? "اختر البلدية" : "اختر الولاية أولاً"}</option>
+                {communes.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
             </div>
+            <div className="md:col-span-2">
+              <Field label="العنوان" name="address" required />
+            </div>
+          </div>
+
+          {/* Total */}
+          <div className="mt-6 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4">
+            <span className="text-sm font-bold text-secondary sm:text-base">المجموع</span>
+            <span className="text-2xl font-black text-primary sm:text-3xl">{total} DA</span>
           </div>
 
           <button
             type="submit"
-            className="gold-gradient shadow-gold mt-6 w-full rounded-2xl py-3.5 text-base font-black text-secondary transition hover:scale-[1.01] sm:mt-8 sm:py-4 sm:text-lg"
+            className="gold-gradient shadow-gold mt-5 w-full rounded-2xl py-3.5 text-base font-black text-secondary transition hover:scale-[1.01] sm:mt-6 sm:py-4 sm:text-lg"
           >
             {submitted ? "تم استلام طلبك ✓" : "تأكيد الطلب"}
           </button>
