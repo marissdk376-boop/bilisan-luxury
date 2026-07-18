@@ -166,8 +166,10 @@ function OrderForm() {
 
     try {
       const url = import.meta.env.VITE_GOOGLE_SHEET_URL;
+      const urlSearchParams = new URLSearchParams(formData as any);
+      
       if (url && url !== "YOUR_WEB_APP_URL_HERE") {
-        await fetch(url, { method: "POST", body: formData, mode: 'no-cors' });
+        await fetch(url, { method: "POST", body: urlSearchParams, mode: 'no-cors' });
       } else {
         console.warn("VITE_GOOGLE_SHEET_URL is missing or not configured yet.");
       }
