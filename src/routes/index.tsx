@@ -138,13 +138,13 @@ function OrderForm() {
     setTimeout(() => setSubmitted(false), 4000);
   };
   return (
-    <section id="order" className="mt-20">
+    <section id="order" className="mt-14 sm:mt-20">
       <div className="mx-auto max-w-3xl">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-black text-secondary md:text-4xl">
+        <div className="mb-6 text-center sm:mb-8">
+          <h2 className="text-2xl font-black text-secondary sm:text-3xl md:text-4xl">
             أكمل <span className="gold-text">طلبك</span>
           </h2>
-          <p className="mt-2 text-muted-foreground">املأ النموذج وسنتواصل معك لتأكيد الطلب</p>
+          <p className="mt-2 text-sm text-muted-foreground sm:text-base">املأ النموذج وسنتواصل معك لتأكيد الطلب</p>
         </div>
 
         <motion.form
@@ -153,14 +153,14 @@ function OrderForm() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="glass shadow-luxury rounded-3xl p-6 md:p-10"
+          className="glass shadow-luxury rounded-2xl p-4 sm:rounded-3xl sm:p-6 md:p-10"
         >
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
             <Field label="الاسم الكامل" name="name" required />
             <Field label="رقم الهاتف" name="phone" type="tel" required />
             <div>
               <label className="mb-2 block text-sm font-bold text-secondary">الولاية</label>
-              <select required className="w-full rounded-2xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary">
+              <select required className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl">
                 <option value="">اختر الولاية</option>
                 {wilayas.map((w) => <option key={w} value={w}>{w}</option>)}
               </select>
@@ -168,18 +168,18 @@ function OrderForm() {
             <Field label="البلدية" name="commune" required />
             <div className="md:col-span-2">
               <label className="mb-2 block text-sm font-bold text-secondary">الكمية</label>
-              <input type="number" name="qty" defaultValue={1} min={1} required className="w-full rounded-2xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary" />
+              <input type="number" name="qty" defaultValue={1} min={1} required className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl" />
             </div>
           </div>
 
           <button
             type="submit"
-            className="gold-gradient shadow-gold mt-8 w-full rounded-2xl py-4 text-lg font-black text-secondary transition hover:scale-[1.01]"
+            className="gold-gradient shadow-gold mt-6 w-full rounded-2xl py-3.5 text-base font-black text-secondary transition hover:scale-[1.01] sm:mt-8 sm:py-4 sm:text-lg"
           >
             {submitted ? "تم استلام طلبك ✓" : "تأكيد الطلب"}
           </button>
 
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <p className="mt-4 text-center text-xs text-muted-foreground sm:text-sm">
             الدفع عند الاستلام • توصيل لكل الولايات
           </p>
         </motion.form>
@@ -196,7 +196,7 @@ function Field({ label, name, type = "text", required }: { label: string; name: 
         name={name}
         type={type}
         required={required}
-        className="w-full rounded-2xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary"
+        className="w-full rounded-xl border border-input bg-white/70 px-4 py-3 text-secondary outline-none focus:border-primary sm:rounded-2xl"
       />
     </div>
   );
