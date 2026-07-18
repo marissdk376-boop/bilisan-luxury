@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Check, Sparkles, Flame, Leaf } from "lucide-react";
 import { communesByWilaya } from "@/data/communes";
 import { deliveryRates, getRateForWilaya, wilayaLabel } from "@/data/shipping";
@@ -326,6 +326,41 @@ function OrderForm() {
           </p>
         </motion.form>
       </div>
+
+      {/* Success Popup Modal */}
+      <AnimatePresence>
+        {submitted && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="relative w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-2xl"
+            >
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                <Check className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="mb-2 text-2xl font-black text-secondary">
+                تم استلام طلبك بنجاح!
+              </h3>
+              <p className="mb-6 text-base text-muted-foreground">
+                شكراً لك على ثقتك بنا. سنتصل بك لتأكيد الطلب في غضون الـ 5 ساعات القادمة.
+              </p>
+              <button
+                onClick={() => setSubmitted(false)}
+                className="gold-gradient shadow-gold w-full rounded-xl py-3 text-lg font-bold text-secondary transition hover:scale-[1.02]"
+              >
+                حسناً
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
