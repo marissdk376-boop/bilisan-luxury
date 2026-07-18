@@ -146,10 +146,42 @@ function OrderForm() {
   const deliveryFee = rate ? rate[deliveryType] : 0;
   const total = productPrice + deliveryFee;
 
-  const submit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    // Add extra calculated data to formData
+    formData.append("pack", packs.find(p => p.id === pack)?.label || pack);
+    formData.append("wilaya", wilaya);
+    formData.append("commune", commune);
+    formData.append("deliveryType", deliveryType === "domicile" ? "توصيل للمنزل" : "Stop Desk");
+    formData.append("total", total.toString());
+    formData.append("date", new Date().toISOString());
+
+    try {
+      const url = import.meta.env.VITE_GOOGLE_SHEET_URL;
+      if (url && url !== "YOUR_WEB_APP_URL_HERE") {
+        await fetch(url, { method: "POST", body: formData, mode: 'no-cors' });
+      } else {
+        console.warn("VITE_GOOGLE_SHEET_URL is missing or not configured yet.");
+      }
+      setSubmitted(true);
+      form.reset();
+      setWilaya("");
+      setCommune("");
+      setTimeout(() => setSubmitted(false), 5000);
+    } catch (error) {
+      console.error("Error submitting form", error);
+      alert("حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -281,9 +313,10 @@ function OrderForm() {
 
           <button
             type="submit"
-            className="gold-gradient shadow-gold mt-5 w-full rounded-2xl py-3.5 text-base font-black text-secondary transition hover:scale-[1.01] sm:mt-6 sm:py-4 sm:text-lg"
+            disabled={isSubmitting || submitted}
+            className={`gold-gradient shadow-gold mt-5 w-full rounded-2xl py-3.5 text-base font-black text-secondary transition sm:mt-6 sm:py-4 sm:text-lg ${(isSubmitting || submitted) ? "opacity-70 cursor-not-allowed" : "hover:scale-[1.01]"}`}
           >
-            {submitted ? "تم استلام طلبك ✓" : "تأكيد الطلب"}
+            {isSubmitting ? "جاري الإرسال..." : submitted ? "تم استلام طلبك بنجاح ✓" : "تأكيد الطلب"}
           </button>
 
           <p className="mt-4 text-center text-xs text-muted-foreground sm:text-sm">
