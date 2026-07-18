@@ -1,7 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Sparkles, Flame, Leaf } from "lucide-react";
+import { communesByWilaya } from "@/data/communes";
+
+const packs = [
+  { id: "mini", label: "علبة صغيرة", price: 2000, desc: "1 علبة صغيرة" },
+  { id: "grande", label: "علبة كبيرة", price: 3400, desc: "1 علبة كبيرة", featured: true },
+  { id: "duo", label: "علبتين كبيرتين", price: 6000, desc: "2 علبة كبيرة" },
+] as const;
+type PackId = typeof packs[number]["id"];
 
 import img1 from "@/assets/6b03e214-cf61-49ce-ad38-897931b75b96.jpg.asset.json";
 import img2 from "@/assets/a5a2f101-4cd1-432b-a47a-82fd598c99c7.jpg.asset.json";
