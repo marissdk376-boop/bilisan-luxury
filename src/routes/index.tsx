@@ -5,11 +5,11 @@ import { Check, Sparkles, Flame, Leaf } from "lucide-react";
 import { communesByWilaya } from "@/data/communes";
 import { deliveryRates, getRateForWilaya, wilayaLabel } from "@/data/shipping";
 
-type Pack = { id: string; label: string; price: number; desc: string; featured?: boolean };
+type Pack = { id: string; label: string; price: number; desc: string; featured?: boolean; img?: string };
 const packs: Pack[] = [
-  { id: "mini", label: "علبة بخور صغيرة + عطر", price: 2000, desc: "علبة بخور صغيرة + عطر" },
-  { id: "grande", label: "علبة بخور كبيرة + عطر", price: 3400, desc: "علبة بخور كبيرة + عطر", featured: true },
-  { id: "duo", label: "2 علبة بخور كبيرة + 2 عطر", price: 6000, desc: "2 علبة بخور كبيرة + 2 عطر" },
+  { id: "mini", label: "علبة بخور صغيرة + عطر", price: 2000, desc: "علبة بخور صغيرة + عطر", img: "/0303.jfif" },
+  { id: "grande", label: "علبة بخور كبيرة + عطر", price: 3400, desc: "علبة بخور كبيرة + عطر", featured: true, img: "/pack-grande.jpg" },
+  { id: "duo", label: "2 علبة بخور كبيرة + 2 عطر", price: 6000, desc: "2 علبة بخور كبيرة + 2 عطر", img: "/pack-grande.jpg" },
 ];
 type PackId = string;
 
@@ -220,8 +220,19 @@ function OrderForm() {
                         الأكثر طلباً
                       </span>
                     )}
+                    {p.img && (
+                      <div className="relative mx-auto mb-2 mt-1 h-36 w-36">
+                        <div className="h-36 w-36 overflow-hidden rounded-full border-2 border-primary/40 shadow-gold" style={{ background: "linear-gradient(135deg, #201612 0%, #3a2518 60%, #4a2e18 100%)" }}>
+                          <img src={p.img} alt={p.label} className="h-full w-full object-contain" />
+                        </div>
+                        {p.id === "duo" && (
+                          <span className="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-black text-secondary shadow-gold border-2 border-white">
+                            ×2
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <div className="text-sm font-bold text-secondary">{p.label}</div>
-                    <div className="mt-1 text-xs text-muted-foreground">{p.desc}</div>
                     <div className="mt-2 text-lg font-black text-primary">{p.price} DA</div>
                   </button>
                 );
