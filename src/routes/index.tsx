@@ -55,7 +55,11 @@ function Landing() {
   return (
     <main className="min-h-screen">
       <div className="mx-auto max-w-6xl px-4 py-6 sm:py-10 lg:py-16">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-14">
+        {/* Order Form — first position */}
+        <OrderForm />
+
+        {/* Gallery + Description */}
+        <div className="mt-14 sm:mt-20 grid gap-8 lg:grid-cols-2 lg:gap-14">
           {/* Gallery */}
           <div>
             <motion.div
@@ -116,18 +120,8 @@ function Landing() {
                 </li>
               ))}
             </ul>
-
-            <a
-              href="#order"
-              className="gold-gradient shadow-gold mt-6 inline-flex w-full items-center justify-center rounded-2xl px-6 py-3.5 text-base font-black text-secondary transition hover:scale-[1.02] sm:mt-8 sm:px-8 sm:py-4 sm:text-lg md:w-fit"
-            >
-              اطلب الآن
-            </a>
           </div>
         </div>
-
-        {/* Order Form */}
-        <OrderForm />
       </div>
     </main>
   );
@@ -187,7 +181,7 @@ function OrderForm() {
   };
 
   return (
-    <section id="order" className="mt-14 sm:mt-20">
+    <section id="order">
       <div className="mx-auto max-w-3xl">
         <div className="mb-6 text-center sm:mb-8">
           <h2 className="text-2xl font-black text-secondary sm:text-3xl md:text-4xl">
