@@ -53,8 +53,17 @@ function Landing() {
   const [main, setMain] = useState(images[0]);
 
   return (
-    <main className="min-h-screen">
-      <div className="mx-auto max-w-6xl px-4 py-6 sm:py-10 lg:py-16">
+    <main className="min-h-screen relative overflow-hidden bg-[#FDFBF7] font-arabic">
+      {/* Photo Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <img 
+          src="/0404.jfif" 
+          alt="" 
+          className="absolute inset-0 h-full w-full object-cover object-center fixed opacity-30" 
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-6 sm:py-10 lg:py-16">
         {/* Order Form — first position */}
         <OrderForm />
 
@@ -67,7 +76,7 @@ function Landing() {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
-              className="glass shadow-luxury overflow-hidden rounded-2xl sm:rounded-3xl"
+              className="glass shadow-luxury overflow-hidden rounded-2xl sm:rounded-3xl border-primary/20"
             >
               <img src={main} alt="بخور البيلسان الأصلي" className="aspect-square w-full object-cover" />
             </motion.div>
@@ -76,7 +85,7 @@ function Landing() {
                 <button
                   key={src}
                   onClick={() => setMain(src)}
-                  className={`overflow-hidden rounded-lg border-2 transition sm:rounded-xl ${main === src ? "border-primary shadow-gold" : "border-transparent opacity-70 hover:opacity-100"}`}
+                  className={`overflow-hidden rounded-lg border-2 transition sm:rounded-xl ${main === src ? "border-primary shadow-gold" : "border-transparent opacity-70 hover:opacity-100 hover:scale-105"}`}
                 >
                   <img src={src} alt="" className="aspect-square w-full object-cover" />
                 </button>
@@ -86,21 +95,21 @@ function Landing() {
 
           {/* Title + Description */}
           <div className="flex flex-col justify-center">
-            <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] font-bold text-secondary sm:mb-4 sm:px-4 sm:py-1.5 sm:text-xs">
+            <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-white/60 px-3 py-1 text-[11px] font-bold text-secondary shadow-sm sm:mb-4 sm:px-4 sm:py-1.5 sm:text-xs">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
               أصلي 100% من الصحراء الجزائرية
             </div>
 
-            <h1 className="text-3xl font-black leading-tight text-secondary sm:text-4xl md:text-5xl lg:text-6xl">
-              بخور <span className="gold-text">البيلسان</span> الأصلي
+            <h1 className="text-3xl font-black leading-tight text-secondary sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-sm">
+              بخور <span className="gold-text drop-shadow-md">البيلسان</span> الأصلي
             </h1>
 
             <div className="mt-3 flex flex-wrap items-baseline gap-2 sm:mt-4 sm:gap-3">
-              <span className="text-sm text-muted-foreground">ابتداءً من</span>
-              <span className="text-2xl font-black text-primary sm:text-3xl">2000 DA</span>
+              <span className="text-sm text-muted-foreground font-medium">ابتداءً من</span>
+              <span className="text-2xl font-black text-primary sm:text-3xl drop-shadow-sm">2000 DA</span>
             </div>
 
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg font-medium">
               بخور البيلسان الأصلي هو تحفة عطرية نادرة مستخرجة من أعماق الصحراء الجزائرية.
               رائحة شرقية فاخرة تدوم لساعات طويلة، تمنح منزلك أجواء الفخامة والأصالة،
               وتترك أثراً لا يُنسى في كل مناسبة. مكونات طبيعية 100% بدون أي إضافات كيميائية.
@@ -113,10 +122,10 @@ function Landing() {
                 { icon: Check, t: "الدفع عند الاستلام في كل الولايات" },
               ].map(({ icon: Icon, t }) => (
                 <li key={t} className="flex items-center gap-3 text-secondary">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary sm:h-9 sm:w-9">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm border border-primary/20 text-primary sm:h-9 sm:w-9 transition-transform hover:scale-110">
                     <Icon className="h-4 w-4" />
                   </span>
-                  <span className="text-sm font-medium sm:text-base">{t}</span>
+                  <span className="text-sm font-bold sm:text-base">{t}</span>
                 </li>
               ))}
             </ul>
@@ -221,7 +230,7 @@ function OrderForm() {
                       </span>
                     )}
                     {p.img && (
-                      <div className="relative mx-auto mb-3 mt-1 w-[90%]">
+                      <div className="relative mx-auto mb-3 mt-1 w-[65%] max-w-[130px]">
                         <div className="overflow-hidden rounded-2xl border-2 border-primary/40 shadow-gold" style={{ background: "linear-gradient(135deg, #201612 0%, #3a2518 60%, #4a2e18 100%)" }}>
                           <img src={p.img} alt={p.label} className="h-auto w-full object-cover" />
                         </div>
