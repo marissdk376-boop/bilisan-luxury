@@ -8,7 +8,7 @@ import { deliveryRates, getRateForWilaya, wilayaLabel } from "@/data/shipping";
 type Pack = { id: string; label: string; price: number; desc: string; featured?: boolean };
 const packs: Pack[] = [
   { id: "mini", label: "علبة بخور صغيرة + عطر", price: 2000, desc: "علبة بخور صغيرة + عطر" },
-  { id: "grande", label: "علبة كبيرة", price: 3400, desc: "1 علبة كبيرة", featured: true },
+  { id: "grande", label: "علبة بخور كبيرة + عطر", price: 3400, desc: "علبة بخور كبيرة + عطر", featured: true },
   { id: "duo", label: "علبتين كبيرتين", price: 6000, desc: "2 علبة كبيرة" },
 ];
 type PackId = string;
