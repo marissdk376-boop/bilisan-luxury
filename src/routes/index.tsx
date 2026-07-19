@@ -221,12 +221,12 @@ function OrderForm() {
                       </span>
                     )}
                     {p.img && (
-                      <div className="relative mx-auto mb-2 mt-1 h-36 w-36">
-                        <div className="h-36 w-36 overflow-hidden rounded-full border-2 border-primary/40 shadow-gold" style={{ background: "linear-gradient(135deg, #201612 0%, #3a2518 60%, #4a2e18 100%)" }}>
-                          <img src={p.img} alt={p.label} className="h-full w-full object-contain" />
+                      <div className="relative mx-auto mb-3 mt-1 w-[90%]">
+                        <div className="overflow-hidden rounded-2xl border-2 border-primary/40 shadow-gold" style={{ background: "linear-gradient(135deg, #201612 0%, #3a2518 60%, #4a2e18 100%)" }}>
+                          <img src={p.img} alt={p.label} className="h-auto w-full object-cover" />
                         </div>
                         {p.id === "duo" && (
-                          <span className="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-black text-secondary shadow-gold border-2 border-white">
+                          <span className="absolute -bottom-3 -right-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-black text-secondary shadow-gold border-2 border-white">
                             ×2
                           </span>
                         )}
