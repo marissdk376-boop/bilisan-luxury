@@ -217,7 +217,10 @@ function OrderForm() {
                   <button
                     key={p.id}
                     type="button"
-                    onClick={() => setPack(p.id)}
+                    onClick={() => {
+                      setPack(p.id);
+                      document.getElementById("user-info-fields")?.scrollIntoView({ behavior: "smooth" });
+                    }}
                     className={`relative rounded-2xl border-2 p-4 text-center transition ${
                       active
                         ? "border-primary bg-primary/10 shadow-gold"
@@ -249,7 +252,7 @@ function OrderForm() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
+          <div id="user-info-fields" className="grid gap-4 sm:gap-5 md:grid-cols-2 scroll-mt-6">
             <Field label="الاسم الكامل" name="name" required />
             <Field label="رقم الهاتف" name="phone" type="tel" required />
             <div>
