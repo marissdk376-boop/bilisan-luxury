@@ -9,7 +9,7 @@ type Pack = { id: string; label: string; price: number; desc: string; featured?:
 const packs: Pack[] = [
   { id: "mini", label: "علبة بخور صغيرة + عطر", price: 2000, desc: "علبة بخور صغيرة + عطر" },
   { id: "grande", label: "علبة بخور كبيرة + عطر", price: 3400, desc: "علبة بخور كبيرة + عطر", featured: true },
-  { id: "duo", label: "علبتين كبيرتين", price: 6000, desc: "2 علبة كبيرة" },
+  { id: "duo", label: "2 علبة بخور كبيرة + 2 عطر", price: 6000, desc: "2 علبة بخور كبيرة + 2 عطر" },
 ];
 type PackId = string;
 
