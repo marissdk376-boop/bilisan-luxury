@@ -6,8 +6,9 @@ import { communesByWilaya } from "@/data/communes";
 import { deliveryRates, getRateForWilaya, wilayaLabel } from "@/data/shipping";
 import {
   trackViewContent,
-  trackInitiateCheckout,
+  trackCheckout,
   trackPurchase,
+  identify,
   normalizeAlgerianPhone,
   parseName,
 } from "@/lib/pixel";
@@ -177,21 +178,30 @@ function OrderForm() {
     const form = e.currentTarget;
     const formData = new FormData(form);
 
-    // Collect user-entered values for Advanced Matching before formData mutations.
-    const rawPhone = formData.get("phone") as string ?? "";
-    const rawName  = formData.get("name")  as string ?? "";
+    // Read user data BEFORE appending extra fields to formData.
+    const rawPhone = (formData.get("phone") as string) ?? "";
+    const rawName  = (formData.get("name")  as string) ?? "";
+
+    // Store Advanced Matching data via identify().
+    // trackPurchase() will pick this up internally — no re-init needed.
+    const { fn, ln } = parseName(rawName);
+    identify({
+      ph: normalizeAlgerianPhone(rawPhone),
+      fn,
+      ln,
+    });
 
     // Add extra calculated data to formData
-    formData.append("pack", packs.find(p => p.id === pack)?.label || pack);
+    formData.append("pack", packs.find((p) => p.id === pack)?.label || pack);
     formData.append("wilaya", wilaya);
     formData.append("commune", commune);
     formData.append("deliveryType", deliveryType === "domicile" ? "توصيل للمنزل" : "Stop Desk");
     formData.append("total", total.toString());
     formData.append("date", new Date().toISOString());
 
-    // Track InitiateCheckout — fires once per session, before the network call.
+    // Track InitiateCheckout before the network call.
     const selectedPack = packs.find((p) => p.id === pack)!;
-    trackInitiateCheckout({
+    trackCheckout({
       contentIds: [pack],
       value: total,
       numItems: 1,
@@ -202,24 +212,18 @@ function OrderForm() {
       const urlSearchParams = new URLSearchParams(formData as any);
 
       if (url && url !== "YOUR_WEB_APP_URL_HERE") {
-        await fetch(url, { method: "POST", body: urlSearchParams, mode: 'no-cors' });
+        await fetch(url, { method: "POST", body: urlSearchParams, mode: "no-cors" });
       } else {
         console.warn("VITE_GOOGLE_SHEET_URL is missing or not configured yet.");
       }
 
       // Track Purchase ONLY after confirmed backend success.
-      // Advanced Matching: phone + name are normalized and passed to Meta.
-      const { fn, ln } = parseName(rawName);
+      // Advanced Matching data is read from identify() store inside trackPurchase().
       trackPurchase({
         contentIds: [pack],
         contentName: selectedPack.label,
         value: total,
         numItems: 1,
-        userData: {
-          ph: normalizeAlgerianPhone(rawPhone),
-          fn,
-          ln,
-        },
       });
 
       setSubmitted(true);
