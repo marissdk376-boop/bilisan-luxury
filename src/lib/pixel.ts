@@ -284,6 +284,16 @@ export function trackPageView(): void {
 }
 
 /**
+ * Meta does not support DZD as a valid currency for standard events.
+ * It will throw "[Meta Pixel] - Parameter 'currency' is invalid".
+ * We must convert it to a supported currency (e.g. EUR) for tracking only.
+ */
+const DZD_TO_EUR = 1 / 145;
+function toEur(dzd: number): number {
+  return Math.round(dzd * DZD_TO_EUR * 100) / 100;
+}
+
+/**
  * Track ViewContent.
  * Fire when the product page is visible to the user.
  *
@@ -305,8 +315,8 @@ export function trackViewContent(params: ViewContentParams): void {
     content_category: params.contentCategory,
     content_ids:      params.contentIds,
     content_type:     "product",
-    currency:         "DZD",
-    value:            Number(params.value), // explicit cast — always a number, never a string
+    currency:         "EUR", // DZD is unsupported by Meta
+    value:            toEur(Number(params.value)),
     num_items:        params.numItems ?? 1,
   };
 
@@ -335,8 +345,8 @@ export function trackCheckout(params: CheckoutParams): void {
   const payload = {
     content_ids:  params.contentIds,
     content_type: "product",
-    currency:     "DZD",
-    value:        Number(params.value),
+    currency:     "EUR", // DZD is unsupported by Meta
+    value:        toEur(Number(params.value)),
     num_items:    params.numItems,
   };
 
@@ -353,12 +363,6 @@ export function trackCheckout(params: CheckoutParams): void {
  *
  * @param params - Purchase metadata
  * @returns event_id — store this if you add Conversions API later
- *
- * CAPI EXTENSION POINT:
- *   Add a fetch() to your server endpoint here, passing:
- *   - event_id (for deduplication with this pixel event)
- *   - _userData (for Advanced Matching server-side)
- *   - payload (event data)
  */
 export function trackPurchase(params: PurchaseParams): string {
   const eventId = generateEventId();
@@ -374,8 +378,8 @@ export function trackPurchase(params: PurchaseParams): string {
   _fired.add("Purchase");
 
   const payload = {
-    value:        Number(params.value),
-    currency:     "DZD",
+    value:        toEur(Number(params.value)),
+    currency:     "EUR", // DZD is unsupported by Meta
     content_ids:  params.contentIds,
     content_name: params.contentName,
     content_type: "product",
