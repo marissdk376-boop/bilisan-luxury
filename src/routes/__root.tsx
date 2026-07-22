@@ -9,6 +9,8 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { trackPageView } from "../lib/pixel";
+
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -93,6 +95,7 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="ar" dir="rtl">
       <head>
         <HeadContent />
+        {/* Meta Pixel — init only. PageView is fired client-side in RootComponent */}
         <script
           dangerouslySetInnerHTML={{
             __html: `!function(f,b,e,v,n,t,s)
@@ -103,12 +106,14 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '2104297943797519');
-fbq('track', 'PageView');`
+fbq('init', '2104297943797519');`
           }}
         />
         <noscript>
-          <img height="1" width="1" style={{ display: 'none' }}
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
             src="https://www.facebook.com/tr?id=2104297943797519&ev=PageView&noscript=1"
           />
         </noscript>
@@ -123,6 +128,13 @@ fbq('track', 'PageView');`
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  // Fire PageView once on initial client-side hydration.
+  // trackPageView() is idempotent — safe against React StrictMode double-invoke.
+  useEffect(() => {
+    trackPageView();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />

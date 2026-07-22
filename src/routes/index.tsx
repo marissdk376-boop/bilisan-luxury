@@ -1,9 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Sparkles, Flame, Leaf } from "lucide-react";
 import { communesByWilaya } from "@/data/communes";
 import { deliveryRates, getRateForWilaya, wilayaLabel } from "@/data/shipping";
+import {
+  trackViewContent,
+  trackInitiateCheckout,
+  trackPurchase,
+  normalizeAlgerianPhone,
+  parseName,
+} from "@/lib/pixel";
 
 type Pack = { id: string; label: string; price: number; desc: string; featured?: boolean; img?: string };
 const packs: Pack[] = [
@@ -51,6 +58,17 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   const [main, setMain] = useState(images[0]);
+
+  // Track ViewContent once when the product page is visible.
+  useEffect(() => {
+    trackViewContent({
+      contentName: "بخور البيلسان الأصلي",
+      contentCategory: "بخور",
+      contentIds: ["pack_grande"],
+      value: 3400, // DZD — converted to EUR by pixel.ts
+      numItems: 1,
+    });
+  }, []);
 
   return (
     <main className="min-h-screen relative overflow-hidden bg-[#FDFBF7] font-arabic">
@@ -154,10 +172,14 @@ function OrderForm() {
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
-    
+
     setIsSubmitting(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
+
+    // Collect user-entered values for Advanced Matching before formData mutations.
+    const rawPhone = formData.get("phone") as string ?? "";
+    const rawName  = formData.get("name")  as string ?? "";
 
     // Add extra calculated data to formData
     formData.append("pack", packs.find(p => p.id === pack)?.label || pack);
@@ -167,22 +189,39 @@ function OrderForm() {
     formData.append("total", total.toString());
     formData.append("date", new Date().toISOString());
 
+    // Track InitiateCheckout — fires once per session, before the network call.
+    const selectedPack = packs.find((p) => p.id === pack)!;
+    trackInitiateCheckout({
+      contentIds: [pack],
+      value: total,
+      numItems: 1,
+    });
+
     try {
       const url = import.meta.env.VITE_GOOGLE_SHEET_URL;
       const urlSearchParams = new URLSearchParams(formData as any);
-      
+
       if (url && url !== "YOUR_WEB_APP_URL_HERE") {
         await fetch(url, { method: "POST", body: urlSearchParams, mode: 'no-cors' });
-        
-        if (typeof window !== "undefined" && (window as any).fbq) {
-          (window as any).fbq("track", "Purchase", {
-            currency: "DZD",
-            value: total,
-          });
-        }
       } else {
         console.warn("VITE_GOOGLE_SHEET_URL is missing or not configured yet.");
       }
+
+      // Track Purchase ONLY after confirmed backend success.
+      // Advanced Matching: phone + name are normalized and passed to Meta.
+      const { fn, ln } = parseName(rawName);
+      trackPurchase({
+        contentIds: [pack],
+        contentName: selectedPack.label,
+        value: total,
+        numItems: 1,
+        userData: {
+          ph: normalizeAlgerianPhone(rawPhone),
+          fn,
+          ln,
+        },
+      });
+
       setSubmitted(true);
       form.reset();
       setWilaya("");
