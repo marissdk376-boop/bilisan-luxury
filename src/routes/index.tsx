@@ -173,6 +173,10 @@ function OrderForm() {
       
       if (url && url !== "YOUR_WEB_APP_URL_HERE") {
         await fetch(url, { method: "POST", body: urlSearchParams, mode: 'no-cors' });
+        
+        if (typeof window !== "undefined" && (window as any).fbq) {
+          (window as any).fbq('track', 'Purchase', { currency: 'DZD', value: total });
+        }
       } else {
         console.warn("VITE_GOOGLE_SHEET_URL is missing or not configured yet.");
       }
