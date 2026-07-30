@@ -243,6 +243,7 @@ function OrderForm() {
         >
           {/* Pack selector */}
           <div className="mb-5 sm:mb-6">
+            <h2 className="mb-3 text-center text-2xl sm:text-4xl font-black text-primary leading-snug">عشبة العلندة الخضراء لمعالجة ومقاومة الاورام الخبيثة</h2>
             <label className="mb-3 block text-center text-sm font-bold text-secondary">اختر العرض</label>
             <div className="grid gap-3 sm:grid-cols-2">
               {packs.map((p) => {
