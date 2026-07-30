@@ -4,6 +4,7 @@ export type Pack = {
   id: string;
   label: string;
   price: number;
+  oldPrice?: number;
   desc: string;
   featured?: boolean;
   img?: string;
@@ -34,7 +35,7 @@ export const productData = {
   defaultPackId: "1kg",
   basePriceText: "1500 DA",
   packs: [
-    { id: "1kg", label: "عشبة العلندة الخضراء 1 KG", price: 2500, desc: "عشبة العلندة الخضراء 1 KG", featured: true, img: "/WhatsApp Image 2026-07-30 at 14.16.08.jpeg", freeDeliveryText: "توصيل مجاني" },
+    { id: "1kg", label: "عشبة العلندة الخضراء 1 KG", price: 2500, oldPrice: 3000, desc: "عشبة العلندة الخضراء 1 KG", featured: true, img: "/WhatsApp Image 2026-07-30 at 14.16.08.jpeg", freeDeliveryText: "توصيل مجاني" },
     { id: "500g", label: "عشبة العلندة الخضراء 500 g", price: 1500, desc: "عشبة العلندة الخضراء 500 g", img: "/WhatsApp Image 2026-07-30 at 14.16.08.jpeg" },
   ] as Pack[],
 

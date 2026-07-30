@@ -275,8 +275,11 @@ function OrderForm() {
                     )}
                     <div className="text-base sm:text-lg font-bold text-secondary">{p.label}</div>
                     <div className="mt-2 text-xl sm:text-2xl font-black text-primary">{p.price} DA</div>
+                    {p.oldPrice && (
+                      <div className="text-lg sm:text-2xl font-black text-red-400 line-through opacity-80">{p.oldPrice} DA</div>
+                    )}
                     {p.freeDeliveryText && (
-                      <div className="mt-2 text-sm sm:text-base font-black text-green-600 tracking-wide drop-shadow-sm">
+                      <div className="mt-2 text-base sm:text-xl font-black text-green-500 tracking-widest drop-shadow-sm uppercase animate-vibrate">
                         + {p.freeDeliveryText}
                       </div>
                     )}
