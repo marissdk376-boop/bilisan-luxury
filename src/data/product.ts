@@ -29,7 +29,7 @@ export const productData = {
     "/WhatsApp Image 2026-07-30 at 14.16.08.jpeg",
     "/WhatsApp Image 2026-07-30 at 14.16.09.jpeg",
   ],
-  backgroundPhoto: "/0404.jfif",
+  backgroundPhoto: "/téléchargement (50).jfif",
 
   // Pricing & Packs
   defaultPackId: "1kg",
