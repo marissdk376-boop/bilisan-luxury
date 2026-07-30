@@ -86,7 +86,7 @@ function Landing() {
               transition={{ duration: 0.4 }}
               className="glass shadow-luxury overflow-hidden rounded-2xl sm:rounded-3xl border-primary/20"
             >
-              <img src={main} alt={productData.name} className="aspect-square w-full object-cover" />
+              <img src={main} alt={productData.name} className="w-full max-h-[600px] object-contain" />
             </motion.div>
             <div className="mt-3 grid grid-cols-5 gap-2 sm:mt-4 sm:gap-3">
               {images.map((src) => (
@@ -267,7 +267,7 @@ function OrderForm() {
                       </span>
                     )}
                     {p.img && (
-                      <div className="relative mx-auto mb-4 mt-2 w-[85%] max-w-[180px]">
+                      <div className="relative mx-auto mb-4 mt-2 w-[95%] max-w-[220px]">
                         <div className="overflow-hidden rounded-2xl border-2 border-primary/40 shadow-gold" style={{ background: "linear-gradient(135deg, #201612 0%, #3a2518 60%, #4a2e18 100%)" }}>
                           <img src={p.img} alt={p.label} className="h-auto w-full object-cover" />
                         </div>
@@ -275,6 +275,11 @@ function OrderForm() {
                     )}
                     <div className="text-base sm:text-lg font-bold text-secondary">{p.label}</div>
                     <div className="mt-2 text-xl sm:text-2xl font-black text-primary">{p.price} DA</div>
+                    {p.freeDeliveryText && (
+                      <div className="mt-2 text-sm sm:text-base font-black text-green-600 tracking-wide drop-shadow-sm">
+                        + {p.freeDeliveryText}
+                      </div>
+                    )}
                   </button>
                 );
               })}
