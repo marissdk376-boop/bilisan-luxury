@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Sparkles, Flame, Leaf } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { communesByWilaya } from "@/data/communes";
 import { deliveryRates, getRateForWilaya, wilayaLabel } from "@/data/shipping";
+import { productData, type Pack } from "@/data/product";
 import {
   trackViewContent,
   trackCheckout,
@@ -13,20 +14,8 @@ import {
   parseName,
 } from "@/lib/pixel";
 
-type Pack = { id: string; label: string; price: number; desc: string; featured?: boolean; img?: string };
-const packs: Pack[] = [
-  { id: "mini", label: "علبة بخور صغيرة + عطر", price: 2000, desc: "علبة بخور صغيرة + عطر", img: "/0303.jfif" },
-  { id: "grande", label: "علبة بخور كبيرة + عطر", price: 3400, desc: "علبة بخور كبيرة + عطر", featured: true, img: "/pack-grande.jpg" },
-  { id: "duo", label: "2 علبة بخور كبيرة + 2 عطر", price: 6000, desc: "2 علبة بخور كبيرة + 2 عطر", img: "/pack-grande.jpg" },
-];
 type PackId = string;
-
-const images = [
-  "/1c6eaf9d-6f71-44ba-98c6-2bc94fa39eb3.jfif",
-  "/a5a2f101-4cd1-432b-a47a-82fd598c99c7.jfif",
-  "/a38543b2-d4e3-4c23-8383-f7f407375797.jfif",
-  "/d42a2cc1-ec0c-4c45-961e-367b7bf54ad3.jfif",
-];
+const { packs, images } = productData;
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -40,14 +29,14 @@ export const Route = createFileRoute("/")({
       children: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Product",
-        name: "بخور البيلسان الأصلي",
-        description: "بخور جزائري أصلي 100% طبيعي من الصحراء",
+        name: productData.name,
+        description: productData.shortDescription,
         image: images,
-        brand: { "@type": "Brand", name: "بخور البيلسان" },
+        brand: { "@type": "Brand", name: productData.brand },
         offers: {
           "@type": "Offer",
           priceCurrency: "DZD",
-          price: "3400",
+          price: productData.packs.find(p => p.id === productData.defaultPackId)?.price.toString() || "0",
           availability: "https://schema.org/InStock",
         },
       }),
@@ -63,10 +52,10 @@ function Landing() {
   // Track ViewContent once when the product page is visible.
   useEffect(() => {
     trackViewContent({
-      contentName: "بخور البيلسان الأصلي",
-      contentCategory: "بخور",
-      contentIds: ["pack_grande"],
-      value: 3400, // DZD — converted to EUR by pixel.ts
+      contentName: productData.name,
+      contentCategory: productData.category,
+      contentIds: [productData.defaultPackId],
+      value: productData.packs.find(p => p.id === productData.defaultPackId)?.price || 0,
       numItems: 1,
     });
   }, []);
@@ -76,7 +65,7 @@ function Landing() {
       {/* Photo Background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <img 
-          src="/0404.jfif" 
+          src={productData.backgroundPhoto} 
           alt="" 
           className="absolute inset-0 h-full w-full object-cover object-center fixed opacity-30" 
         />
@@ -97,7 +86,7 @@ function Landing() {
               transition={{ duration: 0.4 }}
               className="glass shadow-luxury overflow-hidden rounded-2xl sm:rounded-3xl border-primary/20"
             >
-              <img src={main} alt="بخور البيلسان الأصلي" className="aspect-square w-full object-cover" />
+              <img src={main} alt={productData.name} className="aspect-square w-full object-cover" />
             </motion.div>
             <div className="mt-3 grid grid-cols-5 gap-2 sm:mt-4 sm:gap-3">
               {images.map((src) => (
@@ -116,30 +105,24 @@ function Landing() {
           <div className="flex flex-col justify-center">
             <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-primary/40 bg-white/60 px-3 py-1 text-[11px] font-bold text-secondary shadow-sm sm:mb-4 sm:px-4 sm:py-1.5 sm:text-xs">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              أصلي 100% من الصحراء الجزائرية
+              {productData.badge}
             </div>
 
             <h1 className="text-3xl font-black leading-tight text-secondary sm:text-4xl md:text-5xl lg:text-6xl drop-shadow-sm">
-              بخور <span className="gold-text drop-shadow-md">البيلسان</span> الأصلي
+              {productData.titlePart1} <span className="gold-text drop-shadow-md">{productData.titleHighlight}</span> {productData.titlePart2}
             </h1>
 
             <div className="mt-3 flex flex-wrap items-baseline gap-2 sm:mt-4 sm:gap-3">
               <span className="text-sm text-muted-foreground font-medium">ابتداءً من</span>
-              <span className="text-2xl font-black text-primary sm:text-3xl drop-shadow-sm">2000 DA</span>
+              <span className="text-2xl font-black text-primary sm:text-3xl drop-shadow-sm">{productData.basePriceText}</span>
             </div>
 
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg font-medium">
-              بخور البيلسان الأصلي هو تحفة عطرية نادرة مستخرجة من أعماق الصحراء الجزائرية.
-              رائحة شرقية فاخرة تدوم لساعات طويلة، تمنح منزلك أجواء الفخامة والأصالة،
-              وتترك أثراً لا يُنسى في كل مناسبة. مكونات طبيعية 100% بدون أي إضافات كيميائية.
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg font-medium whitespace-pre-line">
+              {productData.description}
             </p>
 
             <ul className="mt-5 space-y-2.5 sm:mt-6 sm:space-y-3">
-              {[
-                { icon: Leaf, t: "طبيعي 100% بدون مواد كيميائية" },
-                { icon: Flame, t: "رائحة تدوم لأكثر من 8 ساعات" },
-                { icon: Check, t: "الدفع عند الاستلام في كل الولايات" },
-              ].map(({ icon: Icon, t }) => (
+              {productData.features.map(({ icon: Icon, text: t }) => (
                 <li key={t} className="flex items-center gap-3 text-secondary">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white shadow-sm border border-primary/20 text-primary sm:h-9 sm:w-9 transition-transform hover:scale-110">
                     <Icon className="h-4 w-4" />
@@ -157,7 +140,7 @@ function Landing() {
 
 function OrderForm() {
   const [submitted, setSubmitted] = useState(false);
-  const [pack, setPack] = useState<PackId>("grande");
+  const [pack, setPack] = useState<PackId>(productData.defaultPackId);
   const [wilaya, setWilaya] = useState("");
   const [commune, setCommune] = useState("");
   const [deliveryType, setDeliveryType] = useState<"domicile" | "stopDesk">("domicile");
@@ -165,7 +148,8 @@ function OrderForm() {
   const communes = useMemo(() => (wilaya ? communesByWilaya[wilaya] ?? [] : []), [wilaya]);
   const productPrice = packs.find((p) => p.id === pack)!.price;
   const rate = getRateForWilaya(wilaya);
-  const deliveryFee = rate ? rate[deliveryType] : 0;
+  const isFreeDelivery = pack === "1kg";
+  const deliveryFee = isFreeDelivery ? 0 : (rate ? rate[deliveryType] : 0);
   const total = productPrice + deliveryFee;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -259,8 +243,8 @@ function OrderForm() {
         >
           {/* Pack selector */}
           <div className="mb-5 sm:mb-6">
-            <label className="mb-3 block text-sm font-bold text-secondary">اختر العرض</label>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <label className="mb-3 block text-center text-sm font-bold text-secondary">اختر العرض</label>
+            <div className="grid gap-3 sm:grid-cols-2">
               {packs.map((p) => {
                 const active = pack === p.id;
                 return (
@@ -271,31 +255,26 @@ function OrderForm() {
                       setPack(p.id);
                       document.getElementById("user-info-fields")?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className={`relative rounded-2xl border-2 p-4 text-center transition ${
+                    className={`relative rounded-2xl border-2 p-5 sm:p-6 text-center transition ${
                       active
                         ? "border-primary bg-primary/10 shadow-gold"
                         : "border-input bg-white/60 hover:border-primary/50"
                     }`}
                   >
                     {p.featured && (
-                      <span className="absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-secondary">
-                        الأكثر طلباً
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-bold text-secondary whitespace-nowrap shadow-sm">
+                        {productData.featuredBadgeText}
                       </span>
                     )}
                     {p.img && (
-                      <div className="relative mx-auto mb-3 mt-1 w-[65%] max-w-[130px]">
+                      <div className="relative mx-auto mb-4 mt-2 w-[85%] max-w-[180px]">
                         <div className="overflow-hidden rounded-2xl border-2 border-primary/40 shadow-gold" style={{ background: "linear-gradient(135deg, #201612 0%, #3a2518 60%, #4a2e18 100%)" }}>
                           <img src={p.img} alt={p.label} className="h-auto w-full object-cover" />
                         </div>
-                        {p.id === "duo" && (
-                          <span className="absolute -bottom-3 -right-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-black text-secondary shadow-gold border-2 border-white">
-                            ×2
-                          </span>
-                        )}
                       </div>
                     )}
-                    <div className="text-sm font-bold text-secondary">{p.label}</div>
-                    <div className="mt-2 text-lg font-black text-primary">{p.price} DA</div>
+                    <div className="text-base sm:text-lg font-bold text-secondary">{p.label}</div>
+                    <div className="mt-2 text-xl sm:text-2xl font-black text-primary">{p.price} DA</div>
                   </button>
                 );
               })}
@@ -341,8 +320,8 @@ function OrderForm() {
               <label className="mb-2 block text-sm font-bold text-secondary">نوع التوصيل</label>
               <div className="grid grid-cols-2 gap-3">
                 {([
-                  { key: "domicile", label: "توصيل للمنزل 🏠", sub: rate ? `${rate.domicile} DA` : "—" },
-                  { key: "stopDesk", label: "Stop Desk 📦",    sub: rate ? `${rate.stopDesk} DA` : "—" },
+                  { key: "domicile", label: "توصيل للمنزل 🏠", sub: isFreeDelivery ? "مجاني" : (rate ? `${rate.domicile} DA` : "—") },
+                  { key: "stopDesk", label: "Stop Desk 📦",    sub: isFreeDelivery ? "مجاني" : (rate ? `${rate.stopDesk} DA` : "—") },
                 ] as const).map(({ key, label, sub }) => (
                   <button
                     key={key}
@@ -371,7 +350,7 @@ function OrderForm() {
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>تكلفة التوصيل</span>
               <span className="font-semibold text-secondary">
-                {wilaya ? `${deliveryFee} DA` : "اختر الولاية أولاً"}
+                {wilaya ? (isFreeDelivery ? "مجاني" : `${deliveryFee} DA`) : "اختر الولاية أولاً"}
               </span>
             </div>
             <div className="border-t border-primary/20 pt-2 flex items-center justify-between">
