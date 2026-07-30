@@ -17,9 +17,9 @@ export type ProductFeature = {
 
 export const productData = {
   // SEO & General Info
-  name: "عشبة العلندة الحكيم",
+  name: "عشبة العلندة الخضراء",
   shortDescription: "عشبة طبيعية فعالة لعلاج العديد من الأمراض",
-  brand: "الحكيم",
+  brand: "الخضراء",
   category: "أعشاب طبيعية",
   
   // Media
@@ -34,15 +34,15 @@ export const productData = {
   defaultPackId: "1kg",
   basePriceText: "1500 DA",
   packs: [
-    { id: "1kg", label: "عشبة العلندة الحكيم 1 KG", price: 2500, desc: "عشبة العلندة الحكيم 1 KG", featured: true, img: "/WhatsApp Image 2026-07-30 at 14.16.08.jpeg", freeDeliveryText: "توصيل مجاني" },
-    { id: "500g", label: "عشبة العلندة الحكيم 500 g", price: 1500, desc: "عشبة العلندة الحكيم 500 g", img: "/WhatsApp Image 2026-07-30 at 14.16.08.jpeg" },
+    { id: "1kg", label: "عشبة العلندة الخضراء 1 KG", price: 2500, desc: "عشبة العلندة الخضراء 1 KG", featured: true, img: "/WhatsApp Image 2026-07-30 at 14.16.08.jpeg", freeDeliveryText: "توصيل مجاني" },
+    { id: "500g", label: "عشبة العلندة الخضراء 500 g", price: 1500, desc: "عشبة العلندة الخضراء 500 g", img: "/WhatsApp Image 2026-07-30 at 14.16.08.jpeg" },
   ] as Pack[],
 
   // UI Strings
   badge: "أصلي وطبيعي 100%",
   titlePart1: "عشبة",
   titleHighlight: "العلندة",
-  titlePart2: "الحكيم",
+  titlePart2: "الخضراء",
   
   description: `يعالج اضطرابات الجهاز التنفسي: (يوسع القصبات الهوائية، يخفف السعال)
 يعالج اضطرابات الجهاز الهضمي: (يساعد على الهضم، يطهر المعدة)
