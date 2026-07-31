@@ -16,13 +16,22 @@ import {
 
 type PackId = string;
 const { packs, images } = productData;
+const siteUrl = (import.meta.env.VITE_SITE_URL ?? "").replace(/\/$/, "");
 
 export const Route = createFileRoute("/")({
   component: Landing,
   head: () => ({
     meta: [
-      { property: "og:image", content: images[0] },
-      { name: "twitter:image", content: images[0] },
+      // Open Graph — overrides root defaults for this route
+      { property: "og:title", content: `${productData.name} — ${productData.shortDescription}` },
+      { property: "og:description", content: productData.shortDescription },
+      { property: "og:image", content: `${siteUrl}${images[0]}` },
+      { property: "og:image:alt", content: productData.name },
+      // Twitter Card — overrides root defaults for this route
+      { name: "twitter:title", content: `${productData.name} — ${productData.shortDescription}` },
+      { name: "twitter:description", content: productData.shortDescription },
+      { name: "twitter:image", content: `${siteUrl}${images[0]}` },
+      { name: "twitter:image:alt", content: productData.name },
     ],
     scripts: [{
       type: "application/ld+json",

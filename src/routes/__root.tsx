@@ -14,6 +14,9 @@ import { trackPageView } from "../lib/pixel";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
+const siteUrl = (import.meta.env.VITE_SITE_URL ?? "").replace(/\/$/, "");
+const OG_IMAGE = `${siteUrl}/WhatsApp Image 2026-07-30 at 14.16.08.jpeg`;
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4" dir="rtl">
@@ -67,14 +70,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "بخور البيلسان الأصلي — من أعماق الصحراء الجزائرية" },
-      { name: "description", content: "بخور البيلسان الأصلي 100% طبيعي من الصحراء الجزائرية. رائحة فاخرة تدوم لساعات وتمنح منزلك أجواء الفخامة والأصالة. اطلب الآن مع التوصيل لكل الولايات." },
-      { name: "keywords", content: "بخور البيلسان, بخور جزائري, بخور أصلي, عطور شرقية, بخور فاخر" },
-      { property: "og:title", content: "بخور البيلسان الأصلي — فخامة الصحراء الجزائرية" },
-      { property: "og:description", content: "رائحة شرقية فاخرة تدوم طويلاً. بخور جزائري أصلي 100% طبيعي." },
+      { title: "عشبة العلندة الخضراء — عشبة طبيعية فعالة لعلاج العديد من الأمراض" },
+      { name: "description", content: "عشبة العلندة الخضراء 100% طبيعية. تعالج اضطرابات الجهاز التنفسي والهضمي وتقوي المناعة وتنشط الدورة الدموية. اطلب الآن مع التوصيل لكل الولايات والدفع عند الاستلام." },
+      { name: "keywords", content: "عشبة العلندة, العلندة الخضراء, أعشاب طبيعية, علاج طبيعي, تقوية المناعة, أعشاب جزائرية" },
+      { property: "og:title", content: "عشبة العلندة الخضراء — أصلي وطبيعي 100%" },
+      { property: "og:description", content: "عشبة طبيعية فعالة لعلاج اضطرابات الجهاز التنفسي والهضمي، تقوي المناعة وتنشط الدورة الدموية. توصيل لكل الجزائر." },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "ar_DZ" },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "عشبة العلندة الخضراء الطبيعية" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "عشبة العلندة الخضراء — أصلي وطبيعي 100%" },
+      { name: "twitter:description", content: "عشبة طبيعية فعالة لعلاج اضطرابات الجهاز التنفسي والهضمي، تقوي المناعة وتنشط الدورة الدموية. توصيل لكل الجزائر." },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "twitter:image:alt", content: "عشبة العلندة الخضراء الطبيعية" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
